@@ -15,7 +15,7 @@ function RecommendList(props) {
                     props.recommendList.map((item, index) => {
                         return (
                             <ListItem key={item.id + index}>
-                                <div className="img_wrapper">
+                                <div className="img_wrapper" style={{ height: "0", paddingBottom: "100%" }}>
                                     <div className="decorate"></div>
                                     {/* 加此参数可以减小请求的图片资源大小 */}
                                     <img src={item.picUrl + "?param=300x300"} width="100%" height="100%" alt="music" />
