@@ -13,6 +13,11 @@ export const changeRecommendList = (data) => ({
     type: actionTypes.CHANGE_RECOMMEND_LIST,
     data: fromJS(data)
 });
+//进场动画
+export const changeEnterLoading = (data) => ({
+    type: actionTypes.CHANGE_ENTER_LOADING,
+    data
+})
 
 export const getBannerList = () => {
     return (dispatch) => {
@@ -23,15 +28,18 @@ export const getBannerList = () => {
         })
     }
 };
-
+//在获取推荐歌单后，应把 loading 状态改为 false
 export const getRecommendList = () => {
     return (dispatch) => {
         getRecommendListRequest().then(data => {
             dispatch(changeRecommendList(data.result));
+            dispatch(changeEnterLoading(false));// 改变 loading
         }).catch(() => {
             console.log("推荐歌单数据传输错误");
         });
     }
 };
+
+
 
 
