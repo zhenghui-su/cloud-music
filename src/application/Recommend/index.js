@@ -5,7 +5,8 @@ import * as actionTypes from './store/actionCreators';
 import RecommendList from '../../components/list/';
 import Scroll from '../../baseUI/scroll/index';
 import { Content } from './style';
-
+// 引入 forceCheck 方法
+import { forceCheck } from 'react-lazyload';
 
 function Recommend(props) {
     const { bannerList, recommendList } = props;
@@ -21,7 +22,7 @@ function Recommend(props) {
 
     return (
         <Content>
-            <Scroll className="list">
+            <Scroll className="list" onScroll={forceCheck}>
                 <div>
                     <Slider bannerList={bannerListJS}></Slider>
                     <RecommendList recommendList={recommendListJS}></RecommendList>
