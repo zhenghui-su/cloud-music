@@ -21,27 +21,40 @@ import LazyLoad, { forceCheck } from 'react-lazyload';
 import Scroll from './../../baseUI/scroll/index';
 import { connect } from 'react-redux';
 import Loading from '../../baseUI/loading';
+// import { CategoryDataContext, CHANGE_ALPHA, CHANGE_CATEGORY } from './data';
 
 function Singers(props) {
     let [category, setCategory] = useState('');
     let [alpha, setAlpha] = useState('');
-
+    /*hook模拟redux
+    // 首先需要引入 useContext
+    // 将之前的 useState 代码删除
+    const { data, dispatch } = useContext(CategoryDataContext);
+    // 拿到 category 和 alpha 的值
+    const { category, alpha } = data.toJS();
+    */
     const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
 
     const { getHotSingerDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch } = props;
 
     useEffect(() => {
-        getHotSingerDispatch();
+        if (!singerList.size) {
+            getHotSingerDispatch();
+        }
         // eslint-disable-next-line
     }, []);
 
+
+
     let handleUpdateAlpha = (val) => {
         setAlpha(val);
+        // dispatch({ type: CHANGE_ALPHA, data: val });
         updateDispatch(category, val);
     };
 
     let handleUpdateCatetory = (val) => {
         setCategory(val);
+        // dispatch({ type: CHANGE_CATEGORY, data: val });
         updateDispatch(val, alpha);
     };
 
