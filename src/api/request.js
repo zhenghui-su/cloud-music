@@ -1,5 +1,6 @@
 import { axiosInstance } from "./config";
 
+// 推荐歌单
 export const getBannerRequest = () => {
     return axiosInstance.get('/banner');
 }
@@ -7,7 +8,7 @@ export const getBannerRequest = () => {
 export const getRecommendListRequest = () => {
     return axiosInstance.get('/personalized');
 }
-
+// 热门歌手列表
 export const getHotSingerListRequest = (count) => {
     return axiosInstance.get(`/top/artists?offset=${count}`);
 }
@@ -35,3 +36,7 @@ export const getSingerListRequest = (category, alpha, count) => {
         }&initial=${alpha.toLowerCase()}&offset=${count}`
     );
 }
+// 排行榜单
+export const getRankListRequest = () => {
+    return axiosInstance.get(`/toplist/detail`);
+};
