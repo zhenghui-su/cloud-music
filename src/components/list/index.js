@@ -21,7 +21,7 @@ function RecommendList(props) {
                     props.recommendList.map(item => {
                         return (
                             <ListItem key={item.id} onClick={() => enterDetail(item.id)}>
-                                <div className="img_wrapper">
+                                <div className="img_wrapper" style={{ height: "0", paddingBottom: "100%" }} >
                                     <div className="decorate"></div>
                                     <LazyLoad placeholder={<img width="100%" height="100%" src={require('./music.png')} alt="music" />}>
                                         <img src={item.picUrl + "?param=300x300"} width="100%" height="100%" alt="music" />
