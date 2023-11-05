@@ -27,10 +27,10 @@ function Horizen(props) {
                 <List>
                     <span>{title}</span>
                     {
-                        list.map((item) => {
+                        list.map((item, index) => {
                             return (
                                 <ListItem
-                                    key={item.id}
+                                    key={item.id + "" + index}
                                     className={`${oldVal === item.key ? 'selected' : ''}`}
                                     onClick={() => handleClick(item.key)}
                                 >
