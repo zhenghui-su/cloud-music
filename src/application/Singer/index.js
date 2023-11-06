@@ -9,7 +9,6 @@ import SongsList from "../SongsList";
 import { connect } from 'react-redux';
 import Loading from "./../../baseUI/loading/index";
 import { getSingerInfo, changeEnterLoading } from "./store/actionCreators";
-import { isEmptyObject } from "../../api/utils";
 
 function Singer(props) {
     const initialHeight = useRef(0);
