@@ -21,6 +21,7 @@ import LazyLoad, { forceCheck } from 'react-lazyload';
 import Scroll from './../../baseUI/scroll/index';
 import { connect } from 'react-redux';
 import Loading from '../../baseUI/loading';
+import { renderRoutes } from 'react-router-config';
 // import { CategoryDataContext, CHANGE_ALPHA, CHANGE_CATEGORY } from './data';
 
 function Singers(props) {
@@ -44,7 +45,9 @@ function Singers(props) {
         // eslint-disable-next-line
     }, []);
 
-
+    const enterDetail = (id) => {
+        props.history.push(`/singers/${id}`);
+    };
 
     let handleUpdateAlpha = (val) => {
         setAlpha(val);
@@ -73,7 +76,7 @@ function Singers(props) {
                 {
                     list.map((item, index) => {
                         return (
-                            <ListItem key={item.accountId + "" + index}>
+                            <ListItem key={item.accountId + "" + index} onClick={() => enterDetail(item.id)}>
                                 <div className="img_wrapper">
                                     <LazyLoad placeholder={<img width="100%" height="100%" src={require('./singer.png')} alt="music" />}>
                                         <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music" />
@@ -106,6 +109,7 @@ function Singers(props) {
                 </Scroll>
                 {enterLoading && <Loading />}
             </ListContainer>
+            {renderRoutes(props.route.routes)}
         </div>
     )
 }

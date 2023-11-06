@@ -5,6 +5,7 @@ import Singers from '../application/Singers';
 import Rank from '../application/Rank';
 import Home from '../application/Home';
 import Album from '../application/Album';
+import Singer from '../application/Singer';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -31,7 +32,14 @@ export default [
             },
             {
                 path: "/singers",
-                component: Singers
+                component: Singers,
+                key: "singers",
+                routes: [
+                    {
+                        path: "/singers/:id",
+                        component: Singer
+                    }
+                ]
             },
             {
                 path: "/rank/",
