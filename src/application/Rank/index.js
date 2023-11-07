@@ -14,7 +14,7 @@ import { filterIndex } from '../../api/utils';
 import { renderRoutes } from 'react-router-config';
 
 function Rank(props) {
-    const { rankList: list, loading } = props;
+    const { rankList: list, loading, songsCount } = props;
 
     const { getRankListDataDispatch } = props;
 
@@ -33,7 +33,7 @@ function Rank(props) {
 
     const enterDetail = (detail) => {
         props.history.push(`/rank/${detail.id}`)
-    };
+    }
     const renderSongList = (list) => {
         return list.length ? (
             <SongList>
@@ -51,7 +51,7 @@ function Rank(props) {
                 {
                     list.map((item) => {
                         return (
-                            <ListItem key={`${item.coverImgId}`} tracks={item.tracks} onClick={() => enterDetail(item)}>
+                            <ListItem key={item.coverImgId} tracks={item.tracks} onClick={() => enterDetail(item)}>
                                 <div className="img_wrapper">
                                     <img src={item.coverImgUrl} alt="" />
                                     <div className="decorate"></div>
@@ -68,7 +68,7 @@ function Rank(props) {
 
     let displayStyle = loading ? { "display": "none" } : { "display": "" };
     return (
-        <Container>
+        <Container play={songsCount}>
             <Scroll>
                 <div>
                     <h1 className="offical" style={displayStyle}>官方榜</h1>
@@ -87,6 +87,7 @@ function Rank(props) {
 const mapStateToProps = (state) => ({
     rankList: state.getIn(['rank', 'rankList']),
     loading: state.getIn(['rank', 'loading']),
+    songsCount: state.getIn(['player', 'playList']).size
 });
 // 映射dispatch到props上
 const mapDispatchToProps = (dispatch) => {

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import Horizen from '../../baseUI/horizen-item';
 import { categoryTypes, alphaTypes } from '../../api/config';
+import { CategoryDataContext } from './data';
 import {
     NavContainer,
     ListContainer,
@@ -21,22 +22,17 @@ import LazyLoad, { forceCheck } from 'react-lazyload';
 import Scroll from './../../baseUI/scroll/index';
 import { connect } from 'react-redux';
 import Loading from '../../baseUI/loading';
+import { CHANGE_CATEGORY, CHANGE_ALPHA, Data } from './data';
 import { renderRoutes } from 'react-router-config';
-// import { CategoryDataContext, CHANGE_ALPHA, CHANGE_CATEGORY } from './data';
 
 function Singers(props) {
-    let [category, setCategory] = useState('');
-    let [alpha, setAlpha] = useState('');
-    /*hook模拟redux
-    // 首先需要引入 useContext
-    // 将之前的 useState 代码删除
-    const { data, dispatch } = useContext(CategoryDataContext);
-    // 拿到 category 和 alpha 的值
-    const { category, alpha } = data.toJS();
-    */
-    const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
+    const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount, songsCount } = props;
 
     const { getHotSingerDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch } = props;
+
+    const { data, dispatch } = useContext(CategoryDataContext);
+
+    const { category, alpha } = data.toJS();
 
     useEffect(() => {
         if (!singerList.size) {
@@ -44,20 +40,17 @@ function Singers(props) {
         }
         // eslint-disable-next-line
     }, []);
-
     const enterDetail = (id) => {
         props.history.push(`/singers/${id}`);
     };
 
     let handleUpdateAlpha = (val) => {
-        setAlpha(val);
-        // dispatch({ type: CHANGE_ALPHA, data: val });
+        dispatch({ type: CHANGE_ALPHA, data: val });
         updateDispatch(category, val);
     };
 
     let handleUpdateCatetory = (val) => {
-        setCategory(val);
-        // dispatch({ type: CHANGE_CATEGORY, data: val });
+        dispatch({ type: CHANGE_CATEGORY, data: val });
         updateDispatch(val, alpha);
     };
 
@@ -90,25 +83,26 @@ function Singers(props) {
             </List>
         )
     };
-
     return (
         <div>
-            <NavContainer>
-                <Horizen list={categoryTypes} title={"分类(默认热门):"} handleClick={(val) => handleUpdateCatetory(val)} oldVal={category}></Horizen>
-                <Horizen list={alphaTypes} title={"首字母:"} handleClick={val => handleUpdateAlpha(val)} oldVal={alpha}></Horizen>
-            </NavContainer>
-            <ListContainer>
-                <Scroll
-                    pullUp={handlePullUp}
-                    pullDown={handlePullDown}
-                    pullUpLoading={pullUpLoading}
-                    pullDownLoading={pullDownLoading}
-                    onScroll={forceCheck}
-                >
-                    {renderSingerList()}
-                </Scroll>
-                {enterLoading && <Loading />}
-            </ListContainer>
+            <Data>
+                <NavContainer>
+                    <Horizen list={categoryTypes} title={"分类(默认热门):"} handleClick={(val) => handleUpdateCatetory(val)} oldVal={category}></Horizen>
+                    <Horizen list={alphaTypes} title={"首字母:"} handleClick={val => handleUpdateAlpha(val)} oldVal={alpha}></Horizen>
+                </NavContainer>
+                <ListContainer play={songsCount}>
+                    <Scroll
+                        pullUp={handlePullUp}
+                        pullDown={handlePullDown}
+                        pullUpLoading={pullUpLoading}
+                        pullDownLoading={pullDownLoading}
+                        onScroll={forceCheck}
+                    >
+                        {renderSingerList()}
+                    </Scroll>
+                    <Loading show={enterLoading}></Loading>
+                </ListContainer>
+            </Data>
             {renderRoutes(props.route.routes)}
         </div>
     )
@@ -119,7 +113,8 @@ const mapStateToProps = (state) => ({
     enterLoading: state.getIn(['singers', 'enterLoading']),
     pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
     pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
-    pageCount: state.getIn(['singers', 'pageCount'])
+    pageCount: state.getIn(['singers', 'pageCount']),
+    songsCount: state.getIn(['player', 'playList']).size
 });
 const mapDispatchToProps = (dispatch) => {
     return {

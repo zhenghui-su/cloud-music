@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import style from '../../assets/global-style'
+import style from '../../assets/global-style';
 
 export const NavContainer = styled.div`
   box-sizing: border-box;
@@ -9,11 +9,12 @@ export const NavContainer = styled.div`
   padding: 5px;
   overflow: hidden;
 `;
+
 export const ListContainer = styled.div`
   position: fixed;
   top: 160px;
   left: 0;
-  bottom: 0;
+  bottom: ${props => props.play > 0 ? "60px" : 0};
   overflow: hidden;
   width: 100%;
 `;
@@ -39,19 +40,18 @@ export const ListItem = styled.div`
   border-bottom: 1px solid ${style["border-color"]};
   .img_wrapper {
     margin-right: 20px;
-    img {
+    img{
       border-radius: 3px;
       width: 50px;
       height: 50px;
     }
   }
-  .name {
+  .name{
     font-size: ${style["font-size-m"]};
     color: ${style["font-color-desc"]};
     font-weight: 500;
   }
 `;
-
 export const EnterLoading = styled.div`
   position: fixed;
   left: 0; right: 0; top: 0; bottom: 0;
@@ -59,4 +59,3 @@ export const EnterLoading = styled.div`
   height: 100px;
   margin: auto;
 `
-

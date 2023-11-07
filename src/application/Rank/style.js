@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import style from '../../assets/global-style';
 
-// Props 中的 globalRank 和 tracks.length 均代表是否为全球榜
+// Props中的globalRank和tracks.length均代表是否为全球榜
 
 export const Container = styled.div`
   position: fixed;
   top: 90px;
-  bottom: 0;
+  bottom: ${props => props.play > 0 ? "60px" : 0};
   width: 100%;
   .offical,.global {
     margin: 10px 5px;
@@ -24,17 +24,17 @@ export const List = styled.ul`
   justify-content: space-between;
   flex-wrap: wrap;
   background: ${style["background-color"]};
-  &::after {
+  &::after{
     content:"";
     display:block;
     width: 32vw;
   }
-`;
+`
 export const ListItem = styled.li`
   display: ${props => props.tracks.length ? "flex" : ""};
   padding: 3px 0;
   border-bottom: 1px solid ${style["border-color"]};
-  .img_wrapper {
+  .img_wrapper{
     width:  ${props => props.tracks.length ? "27vw" : "32vw"};
     height: ${props => props.tracks.length ? "27vw" : "32vw"};
     border-radius: 3px;
@@ -45,14 +45,14 @@ export const ListItem = styled.li`
       width: 100%;
       height: 35px;
       border-radius: 3px;
-      background: linear-gradient (hsla (0,0%,100%,0),hsla (0,0%,43%,.4));
+      background: linear-gradient(hsla(0,0%,100%,0),hsla(0,0%,43%,.4));
     }
-    img {
+    img{
       width: 100%;
       height: 100%;
       border-radius: 3px;
     }
-    .update_frequecy {
+    .update_frequecy{
       position: absolute;
       left: 7px;
       bottom: 7px;
@@ -67,7 +67,7 @@ export const SongList = styled.ul`
   flex-direction: column;
   justify-content: space-around;
   padding: 10px 10px;
-  >li {
+  >li{
     font-size: ${style["font-size-s"]};
     color: grey;
   }

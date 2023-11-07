@@ -74,6 +74,7 @@ function Player(props) {
         togglePlayingDispatch(true);//播放状态
         setCurrentTime(0);//从头开始播放
         setDuration((current.dt / 1000) | 0);//时长
+        //eslint-disable-next-line
     }, [playList, currentIndex]);
 
     useEffect(() => {
