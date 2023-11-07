@@ -9,6 +9,7 @@ import SongsList from "../SongsList";
 import { connect } from 'react-redux';
 import Loading from "./../../baseUI/loading/index";
 import { getSingerInfo, changeEnterLoading } from "./store/actionCreators";
+import MusicNote from "../../baseUI/music-note";
 
 function Singer(props) {
     const initialHeight = useRef(0);
@@ -18,14 +19,10 @@ function Singer(props) {
         artist: immutableArtist,
         songs: immutableSongs,
         loading,
+        songsCount
     } = props;
+
     const { getSingerDataDispatch } = props;
-
-    const id = props.match.params.id;
-
-    useEffect(() => {
-        getSingerDataDispatch(id);
-    }, [getSingerDataDispatch, id]);
 
     const artist = immutableArtist.toJS();
     const songs = immutableSongs.toJS();
@@ -36,16 +33,21 @@ function Singer(props) {
     const songScroll = useRef();
     const header = useRef();
     const layer = useRef();
+    const musicNoteRef = useRef();
 
     //往上偏移的尺寸，露出圆角
     const OFFSET = 5;
+
     useEffect(() => {
+        const id = props.match.params.id;
+        getSingerDataDispatch(id);
         let h = imageWrapper.current.offsetHeight;
         initialHeight.current = h;
         songScrollWrapper.current.style.top = `${h - OFFSET}px`;
         //把遮罩先放在下面，以裹住歌曲列表
         layer.current.style.top = `${h - OFFSET}px`;
         songScroll.current.refresh();
+        // eslint-disable-next-line
     }, []);
 
     const handleScroll = useCallback(pos => {
@@ -91,6 +93,10 @@ function Singer(props) {
         setShowStatus(false);
     }, []);
 
+    const musicAnimation = (x, y) => {
+        musicNoteRef.current.startAnimation({ x, y });
+    };
+
     return (
         <CSSTransition
             in={showStatus}
@@ -100,7 +106,7 @@ function Singer(props) {
             unmountOnExit
             onExited={() => props.history.goBack()}
         >
-            <Container>
+            <Container play={songsCount}>
                 <Header
                     handleClick={setShowStatusFalse}
                     title={artist.name}
@@ -119,13 +125,13 @@ function Singer(props) {
                         <SongsList
                             songs={songs}
                             showCollect={false}
+                            musicAnimation={musicAnimation}
                         ></SongsList>
                     </Scroll>
                 </SongListWrapper>
                 {loading ? (<Loading></Loading>) : null}
+                <MusicNote ref={musicNoteRef}></MusicNote>
             </Container>
-
-
         </CSSTransition>
     )
 }
@@ -135,6 +141,7 @@ const mapStateToProps = state => ({
     artist: state.getIn(["singerInfo", "artist"]),
     songs: state.getIn(["singerInfo", "songsOfArtist"]),
     loading: state.getIn(["singerInfo", "loading"]),
+    songsCount: state.getIn(['player', 'playList']).size
 });
 // 映射dispatch到props上
 const mapDispatchToProps = dispatch => {
