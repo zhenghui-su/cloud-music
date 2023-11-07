@@ -194,15 +194,7 @@ function NormalPlayer(props) {
                             />
                         </div>
 
-                        <div className="icon i-center">
-                            <i
-                                className="iconfont"
-                                onClick={e => clickPlaying(e, !playing)}
-                                dangerouslySetInnerHTML={{
-                                    __html: playing ? "&#xe723;" : "&#xe731;"
-                                }}
-                            ></i>
-                        </div>
+
                     </CDWrapper>
                 </Middle>
 
@@ -225,7 +217,13 @@ function NormalPlayer(props) {
                             <i className="iconfont">&#xe6e1;</i>
                         </div>
                         <div className="icon i-center">
-                            <i className="iconfont">&#xe723;</i>
+                            <i
+                                className="iconfont"
+                                onClick={e => clickPlaying(e, !playing)}
+                                dangerouslySetInnerHTML={{
+                                    __html: playing ? "&#xe723;" : "&#xe731;"
+                                }}
+                            ></i>
                         </div>
                         <div className="icon i-right">
                             <i className="iconfont">&#xe718;</i>
