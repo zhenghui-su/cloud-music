@@ -162,7 +162,7 @@ function NormalPlayer(props) {
             <NormalPlayerContainer ref={normalPlayerRef}>
                 <div className="background">
                     <img
-                        src={song.al.picUrl + "?param=300x300"}
+                        src={song.al.coverUrl + "?param=300x300"}
                         width="100%"
                         height="100%"
                         alt="歌曲图片"

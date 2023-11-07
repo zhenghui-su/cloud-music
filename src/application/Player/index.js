@@ -77,12 +77,12 @@ function Player(props) {
             audioRef.current.play().then(() => {
                 setSongReady(true);
             });
-        }, 100);
+        }, 500);
         togglePlayingDispatch(true);//播放状态
         getLyric(current.id);
         setCurrentTime(0);//从头开始播放
         setDuration((current.dt / 1000) | 0);//时长
-        // eslint-disable-next-line
+        //eslint-disable-next-line
     }, [playList, currentIndex]);
 
     useEffect(() => {
