@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 const SongsList = React.forwardRef((props, refs) => {
 
     const { collectCount, showCollect, songs } = props;
-    // 接受触发动画的函数
+
     const { musicAnimation } = props;
 
     const { changePlayListDispatch, changeCurrentIndexDispatch, changeSequecePlayListDispatch } = props;
