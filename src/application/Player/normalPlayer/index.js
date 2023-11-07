@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { getName } from "../../../api/utils";
+import React, { useRef, useState } from "react";
+import { formatPlayTime, getName } from "../../../api/utils";
 import {
     NormalPlayerContainer,
     Top,
@@ -7,10 +7,14 @@ import {
     Bottom,
     Operators,
     CDWrapper,
+    ProgressWrapper
 } from "./style";
 import { CSSTransition } from "react-transition-group";
 import animations from "create-keyframe-animation";
 import { prefixStyle } from "../../../api/utils";
+import ProgressBarWrapper from "../../../baseUI/progress-bar/index";
+import ProgressBar from "../../../baseUI/progress-bar";
+
 
 function NormalPlayer(props) {
     const {
@@ -31,9 +35,19 @@ function NormalPlayer(props) {
         clickPlaying,
         toggleFullScreen
     } = props;
+    const { percentChange } = props;
     const normalPlayerRef = useRef();
     const cdWrapperRef = useRef();
     const transform = prefixStyle("transform");
+
+    const progressBar = useRef();
+    const progress = useRef();
+    const progressBtn = useRef();
+    const [touch, setTouch] = useState({});
+
+    const progressBtnWidth = 16;
+
+
 
     // 计算偏移的辅助函数
     const _getPosAndScale = () => {
@@ -102,6 +116,46 @@ function NormalPlayer(props) {
         // 不置为 none 现在全屏播放器页面还是存在
         normalPlayerRef.current.style.display = "none";
     };
+    // 处理进度条的偏移
+    const _offset = (offsetWidth) => {
+        progress.current.style.width = `${offsetWidth} px`;
+        progressBtn.current.style.transform = `translate3d (${offsetWidth} px, 0, 0)`;
+    };
+
+    const _changePercent = () => {
+        const barWidth = progressBar.current.clientWidth - progressBtnWidth;
+        const curPercent = progress.current.clientWidth / barWidth;// 新的进度计算
+        percentChange(curPercent);// 把新的进度传给回调函数并执行
+    };
+    const progressTouchStart = (e) => {
+        const startTouch = {};
+        startTouch.initiated = true;//initial 为 true 表示滑动动作开始了
+        startTouch.startX = e.touches[0].pageX;// 滑动开始时横向坐标
+        startTouch.left = progress.current.clientWidth;// 当前 progress 长度
+        setTouch(startTouch);
+    };
+
+    const progressTouchMove = (e) => {
+        if (!touch.initiated) return;
+        // 滑动距离   
+        const deltaX = e.touches[0].pageX - touch.startX;
+        const barWidth = progressBar.current.clientWidth - progressBtnWidth;
+        const offsetWidth = Math.min(Math.max(0, touch.left + deltaX), barWidth);
+        _offset(offsetWidth);
+    };
+
+    const progressTouchEnd = (e) => {
+        const endTouch = JSON.parse(JSON.stringify(touch));
+        endTouch.initiated = false;
+        setTouch(endTouch);
+        _changePercent();
+    };
+    const progressClick = (e) => {
+        const rect = progressBar.current.getBoundingClientRect();
+        const offsetWidth = e.pageX - rect.left;
+        _offset(offsetWidth);
+        _changePercent();
+    };
     return (
         <CSSTransition
             classNames="normal"
@@ -134,14 +188,35 @@ function NormalPlayer(props) {
                     <CDWrapper>
                         <div className="cd">
                             <img
-                                className="image play"
+                                className={`image play ${playing ? "" : "pause"}`}
                                 src={song.al.picUrl + "?param=400x400"}
                                 alt=""
                             />
                         </div>
+
+                        <div className="icon i-center">
+                            <i
+                                className="iconfont"
+                                onClick={e => clickPlaying(e, !playing)}
+                                dangerouslySetInnerHTML={{
+                                    __html: playing ? "&#xe723;" : "&#xe731;"
+                                }}
+                            ></i>
+                        </div>
                     </CDWrapper>
                 </Middle>
+
                 <Bottom className="bottom">
+                    <ProgressWrapper>
+                        <span className="time time-l">{formatPlayTime(currentTime)}</span>
+                        <div className="progress-bar-wrapper">
+                            <ProgressBar
+                                percent={percent}
+                                percentChange={onProgressChange}
+                            ></ProgressBar>
+                        </div>
+                        <div className="time time-r">{formatPlayTime(duration)}</div>
+                    </ProgressWrapper>
                     <Operators>
                         <div className="icon i-left" >
                             <i className="iconfont">&#xe625;</i>
